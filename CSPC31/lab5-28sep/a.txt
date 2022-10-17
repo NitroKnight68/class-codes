@@ -1,0 +1,5 @@
+Write a generic function using the concept of templates in c++ to find the maximum of two integer nos and two floating nos
+
+Templates in c++ to sort the following data types (int, float, char)
+
+function to perform matrix addition, subtraction and multiplication (using dynamic memory)

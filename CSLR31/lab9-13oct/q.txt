@@ -1,0 +1,10 @@
+AVL Tree - Insertion, Deletion (left subtree & right subtree), Search a Node, Balance Factor of Each Node
+
+10, 15, 20, 9, 5, 16, 17, 8, 6
+
+					56(0)
+			45(1)					90(0)
+		30(-1)		50(0)			70(0)		95(-1)
+			35(0)			65(0)		75(0)		99(0)
+		
+			
