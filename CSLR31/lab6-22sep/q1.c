@@ -1,3 +1,4 @@
+//Check whether linked list is palindrome or not
 #include <stdio.h>
 #include <stdlib.h>
 

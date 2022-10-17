@@ -1,3 +1,4 @@
+//Obtain inorder of BST when given preorder and postorder (hard-coded input)
 #include <stdio.h>
 #include <stdlib.h>
  
