@@ -1,4 +1,3 @@
-//Implement inorder and preorder of BST
 #include <stdio.h>
 #include <stdlib.h>
 
