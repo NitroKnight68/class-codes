@@ -54,17 +54,17 @@ void display (struct node* node)
  
 int main ()
 {
-    //int n = 7, index = 0;
-    //char preOrder[] = {'*', '+', 'a', 'b', '+', 'c', 'd'};
-    //char postOrder[] = {'a', 'b', '+', 'c', 'd', '+', '*'};
+    int n = 7, index = 0;
+    char preOrder[] = {'*', '+', 'a', 'b', '+', 'c', 'd'};
+    char postOrder[] = {'a', 'b', '+', 'c', 'd', '+', '*'};
     
     //int n = 9, index = 0;
     //char preOrder[] = {'f', 'b', 'a', 'd', 'c', 'e', 'g', 'i', 'h'};
     //char postOrder[] = {'a', 'c', 'e', 'd', 'b', 'h', 'i', 'g', 'f'};
     
-    int n = 9, index = 0;
-    char preOrder[] = {'a', 'b', 'd', 'c', 'e', 'g', 'f', 'h', 'i'};
-    char postOrder[] = {'d', 'b', 'g', 'e', 'h', 'i', 'f', 'c', 'a'};
+    // int n = 9, index = 0;
+    // char preOrder[] = {'a', 'b', 'd', 'c', 'e', 'g', 'f', 'h', 'i'};
+    // char postOrder[] = {'d', 'b', 'g', 'e', 'h', 'i', 'f', 'c', 'a'};
     
     struct node *root = makeTree(preOrder, postOrder, &index, 0, n - 1, n);
  
