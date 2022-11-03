@@ -42,7 +42,7 @@ void KMP(char* pattern, char* sample)
 	for(int k = 0; k < M; k++)
 		printf("%d ", lps[k]);
 	printf("\n\n");
-	printf("--------Pattern Matching--------\n");	
+	printf("--------Pattern Matching--------\n");		
 
 	int i = 0, j = 0;
 	while ((N - i) >= (M - j)) {
@@ -75,4 +75,3 @@ int main()
 		printf("Pattern not found in the given String\n");
 	return 0;
 }
-
