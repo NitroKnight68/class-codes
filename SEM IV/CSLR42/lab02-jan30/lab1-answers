@@ -1,0 +1,138 @@
+    80  ssh -X DA106121085@10.1.22.25
+    81  cd ~
+    82  mkdir CSLR24
+    83  cd CSLR24/`
+    84  cd CSLR24/
+    85  mkdir Assign1
+    86  mkdir Assign2
+    87  cd Assign1
+    88  touch file1.txt
+    89  cd ..
+    90  cd Assign2
+    91  touch file2.txt
+    92  ls
+    93  gedit file2.txt
+    94  cd ..
+    95  cd Assign1
+    96  gedit file1.txt
+    97  cd ..
+    98  mkdir Assign3
+    99  cp -r Assign2 Assign3
+   100  cd Assign3
+   101  ls
+   102  rm -r Assign2
+   103  cd ..
+   104  cp -r Assign2/ Assign3/
+   105  cd Assign3
+   106  ls
+   107  cd Assign2/
+   108  ls
+   109  cd ..
+   110  cp Assign2/file2.txt Assign3
+   111  cd Assign3
+   112  ls
+   113  cd //
+   114  cd ..
+   115  ls
+   116  cd ~\
+   117  cd ~
+   118  ls
+   119  rm -r CSLR23
+   120  rm -r CSLR24
+   121  mkdir CLSR24
+   122  cd CS
+   123  rm -r CSLR24
+   124  ls
+   125  rm -r CLSR24
+   126  clear
+   127  mkdir CSLR24
+   128  cd CSLR24/
+   129  mkdir Assign1 Assign2
+   130  cd Assign1
+   131  gedit file1.txt
+   132  cd ..
+   133  cd Assign2
+   134  gedit file2.txt
+   135  cat file2.txt
+   136  cd ..
+   137  mkdir Assign3
+   138  cp Assign2/ Assign3/
+   139  cp Assign2 Assign3
+   140  cp Assign2/file2.txt Assign3
+   141  rm -r Assign2
+   142  cd Assign1
+   143  mv file1.txt abc.txt
+   144  ls
+   145  cd ../Assign3
+   146  pwd
+   147  cd ..
+   148  touch Test_1.txt Test_2.txt Test_1-1.txt Test_2-1.txt  
+Test_1-2.xtxt Test_2-2.xtxt Test_1-1.bak Test_2-2.bak File_1.bat
+   149  ls
+   150  lsls file.txt
+   151  ls file.txt
+   152  ls *.txt
+   153  ls *.*t
+   154  cp *t_1*.* Assign3/
+   155  wc Assign1/abc.txt
+   156  history
+   157  cut -d " " -f 1- Assign1/abc.txt | paste -d " " Assign3/file2.txt
+   158  cat Assign3/file2.txt
+   159  cat Assign1/file1.txt
+   160  cat Assign1/abc.txt
+   161  cut -d " " -f 1- Assign1/abc.txt \ | paste -d " " Assign3/file2.txt
+   162  cut -d " " -f 1- Assign1/abc.txt | paste -d " " Assign3/file2.txt
+   163  cat Assign1/abc.txt >> Assign3/file2.txt
+   164  cat Assign3/file2.txt
+   165  date -d %R
+   166  date -d
+   167  man date
+   168  date -d
+   169  date
+   170  date 00d
+   171  date --d
+   172  date %R
+   173  df
+   174  du
+   175  cd ..
+   176  du
+   177  clear
+   178  cd Assign3
+   179  cd CSLR24/Assign3
+   180  mkdir Assign3-1 Assign3-2 Assign3-3
+   181  cd ~
+   182  cd CSLR24/Assign2
+   183  cd CSLR24/Assign3/Assign3-2
+   184  cd ../Assign3-3
+   185  uname
+   186  man uname
+   187  uname --version
+   188  cd ~
+   189  ls -a
+   190  cd home
+   191  cd nitt
+   192  cd Home
+   193  cd Desktop/
+   194  ls -a
+   195  ls /var
+   196  cd ~
+   197  ls /var
+   198  ls /var -r
+   199  calendar
+   200  sudo apt install calender
+   201  sudo apt install calendar
+   202  calendar
+   203  cat CSLR24/Assign3/file2.txt | grep NITT
+   204  cat CSLR24/Assign3/file2.txt | grep NITT -l
+   205  cat CSLR24/Assign3/file2.txt | grep NITT -n
+   206  cd CSLR24/Assign1
+   207  ls -l
+   208  chmod ugo+x abc.txt
+   209  ls -l
+   210  chmod o+w abc.txt
+   211  ls -l
+   212  ps
+   213  pkill ps
+   214  pkill firefox
+   215  history
+
