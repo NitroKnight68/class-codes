@@ -14,7 +14,7 @@ void bubbleSort(vector<int> arr, int N)
 			if (arr[j] > arr[j + 1])
 				swap(arr[j], arr[j + 1]);
 		}
-	}
+	}	
 }
 
 void insertionSort(vector<int> arr, int N)
@@ -31,6 +31,7 @@ void insertionSort(vector<int> arr, int N)
 		}
 		arr[j + 1] = key;
 	}
+		
 }
 
 void selectionSort(vector<int> arr, int N)
@@ -40,8 +41,8 @@ void selectionSort(vector<int> arr, int N)
 	{
 		min = i;
 		for (j = i+1; j < N; j++)
-		if (arr[j] < arr[min])
-			min = j;
+			if (arr[j] < arr[min])
+				min = j;
 		if(min!=i)
 			swap(arr[min], arr[i]);
 	}
@@ -49,20 +50,31 @@ void selectionSort(vector<int> arr, int N)
 
 int main()
 {
-	int N = 100000;
+	int N = 10;
 	vector<int> arr(N);
 	
-	auto start = high_resolution_clock::now();
 	auto fill = []() -> int { return rand() % 999; };
 	generate(arr.begin(), arr.end(), fill);	
 
-	//bubbleSort(arr, N);	
-	//insertionSort(arr, N);
-	selectionSort(arr, N);
+	auto start1 = high_resolution_clock::now();
+	bubbleSort(arr, N);	
+	auto stop1 = high_resolution_clock::now();
 	
-	auto stop = high_resolution_clock::now();
-	auto duration = duration_cast<microseconds>(stop - start);
-	cout << "Time taken by function: " << duration.count() << " microseconds" << endl;
+	auto start2 = high_resolution_clock::now();
+	insertionSort(arr, N);	
+	auto stop2 = high_resolution_clock::now();
+	
+	auto start3 = high_resolution_clock::now();
+	selectionSort(arr, N);	
+	auto stop3 = high_resolution_clock::now();
+	
+
+	auto duration1 = duration_cast<microseconds>(stop1 - start1);
+	cout << "Time taken by Bubble Sort: " << duration1.count() << " microseconds" << endl;
+	auto duration2 = duration_cast<microseconds>(stop2 - start2);
+	cout << "Time taken by Insertion Sort: " << duration2.count() << " microseconds" << endl;
+	auto duration3 = duration_cast<microseconds>(stop3 - start3);
+	cout << "Time taken by Selection Sort: " << duration3.count() << " microseconds" << endl;
 	
 	return 0;
 }
@@ -71,4 +83,3 @@ int main()
 //At n = 10^3, t = 8388 microseconds	 |  At n = 10^3, t = 2133 microseconds	   |  At n = 10^3, t = 3445 microseconds
 //At n = 10^4, t = 959852 microseconds	 |  At n = 10^4, t = 209173 microseconds   |  At n = 10^4, t = 328052 microseconds
 //At n = 10^5, t = 79891945 microseconds |  At n = 10^5, t = 19204826 microseconds |  At n = 10^5, t = 28062005 microseconds
-
