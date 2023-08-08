@@ -1,0 +1,102 @@
+CREATE DATABASE 106121085_Lab1;
+USE 106121085_Lab1;
+
+CREATE TABLE Department (dept_id INT, dept_name VARCHAR(255));
+CREATE TABLE Student (rollno INT, name VARCHAR(255), gender VARCHAR(255), mark1 INT, mark2 INT, mark3 INT, total INT, average DOUBLE, dept_id INT);
+CREATE TABLE Staff (staff_id INT, name VARCHAR(255), designation VARCHAR(255), qualification VARCHAR(255), dept_id INT);
+CREATE TABLE Tutor (rollno INT, staff_id INT);
+
+INSERT INTO Student VALUES (1, 'Adam', 'Male', 80, 70, 90, 0, 0.0, 10);
+INSERT INTO Student VALUES (2, 'Blake', 'Female', 85, 65, 75, 0, 0.0, 11);
+INSERT INTO Student VALUES (3, 'Cat', 'Male', 40, 20, 100, 0, 0.0, 12);
+INSERT INTO Student VALUES (4, 'Doug', 'Male', 63, 54, 36, 0, 0.0, 11);
+INSERT INTO Student VALUES (5, 'Ellie', 'Female', 2, 100, 100, 0, 0.0, 13);
+
+INSERT INTO Department VALUES (10, 'CSE');
+INSERT INTO Department VALUES (11, 'ECE');
+INSERT INTO Department VALUES (12, 'EEE');
+INSERT INTO Department VALUES (13, 'ICE');
+
+INSERT INTO Staff VALUES (101, 'Brijesh', 'Professor', 'M.Tech', 10);
+INSERT INTO Staff VALUES (105, 'Dipesh', 'HOD', 'PhD', 13);
+INSERT INTO Staff VALUES (102, 'Mallesh', 'Professor', 'M.Tech', 11);
+INSERT INTO Staff VALUES (103, 'Kamlesh', 'HOD', 'PhD', 12);
+INSERT INTO Staff VALUES (104, 'Supesh', 'Professor', 'M.Sc', 11);
+
+INSERT INTO Tutor VALUES (1, 101);
+INSERT INTO Tutor VALUES (2, 103);
+INSERT INTO Tutor VALUES (3, 104);
+INSERT INTO Tutor VALUES (4, 102);
+INSERT INTO Tutor VALUES (5, 105);
+INSERT INTO Tutor VALUES (3, 101);
+INSERT INTO Tutor VALUES (4, 103);
+INSERT INTO Tutor VALUES (5, 102);
+
+-- Question 1 --
+Calculate the total and average mark of each student while entering the marks to insert the tuple in the student table.
+-- Answer 1 --
+UPDATE Student SET total = mark1 + mark2 + mark3;
+UPDATE Student SET average = total / 3;
+
+-- Question 2 --
+Display the number of students under the department 'CSE'.
+-- Answer 2 --
+SELECT COUNT(*) FROM Student 
+RIGHT JOIN Department ON Student.dept_id = Department.dept_id 
+WHERE dept_name = 'CSE';
+
+-- Question 3 --
+Display the student details who got average > 85.
+-- Answer 3 --
+SELECT * FROM Student 
+WHERE average > 85;
+
+-- Question 4 --
+How many students are under the tutor 'Brijesh'?
+-- Answer 4 --
+SELECT COUNT(*) FROM Tutor 
+RIGHT JOIN Staff ON Tutor.staff_id = Staff.staff_id 
+WHERE name = 'Brijesh';
+
+-- Question 5 --
+Display the staff details who work in CSE department.
+-- Answer 5 --
+SELECT * FROM Staff 
+RIGHT JOIN Department ON Staff.dept_id = Department.dept_id 
+WHERE dept_name = 'CSE';
+
+-- Question 6 --
+How many designations and departments are there?
+-- Answer 6 --
+SELECT COUNT(DISTINCT(designation)) FROM Staff;
+SELECT COUNT(DISTINCT(dept_id)) FROM Staff;
+
+-- Question 7 --
+Display the student details whose name start with 'A'.
+-- Answer 7 --
+SELECT * FROM Student 
+WHERE name like 'A%';
+
+-- Question 8 --
+Display the name of the department, tutor details for the particular student.
+-- Answer 8 --
+SELECT Student.name, dept_name, Tutor.staff_id, Staff.name, designation, qualification FROM Student 
+RIGHT JOIN Department ON Student.dept_id = Department.dept_id 
+RIGHT JOIN Tutor ON Student.rollno = Tutor.rollno 
+RIGHT JOIN Staff ON Tutor.staff_id = Staff.staff_id 
+WHERE Student.name = 'Cat';
+
+-- Question 9 --
+Display the total number of male and female students department wise.
+-- Answer 9 --
+SELECT dept_name, COUNT(*), gender as genders FROM Student 
+RIGHT JOIN Department ON Student.dept_id = Department.dept_id 
+GROUP BY dept_name, gender;
+
+-- Question 10 --
+Create a view to staff details and their department name whose designation is professor.
+-- Answer 10 -- 
+CREATE VIEW ProfessorView AS 
+SELECT staff_id, name, designation, qualification, dept_name FROM Staff 
+RIGHT JOIN Department ON Staff.dept_id = Department.dept_id 
+WHERE designation = 'Professor';
