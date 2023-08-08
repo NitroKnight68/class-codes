@@ -1,3 +1,4 @@
+-- Table Creation & Insertion --
 CREATE DATABASE 106121085_Lab1;
 USE 106121085_Lab1;
 
@@ -32,53 +33,77 @@ INSERT INTO Tutor VALUES (3, 101);
 INSERT INTO Tutor VALUES (4, 103);
 INSERT INTO Tutor VALUES (5, 102);
 
+==============================================================================================================================
+
 -- Question 1 --
 Calculate the total and average mark of each student while entering the marks to insert the tuple in the student table.
+
 -- Answer 1 --
 UPDATE Student SET total = mark1 + mark2 + mark3;
 UPDATE Student SET average = total / 3;
 
+==============================================================================================================================
+
 -- Question 2 --
 Display the number of students under the department 'CSE'.
+
 -- Answer 2 --
 SELECT COUNT(*) FROM Student 
 RIGHT JOIN Department ON Student.dept_id = Department.dept_id 
 WHERE dept_name = 'CSE';
 
+==============================================================================================================================
+
 -- Question 3 --
 Display the student details who got average > 85.
+
 -- Answer 3 --
 SELECT * FROM Student 
 WHERE average > 85;
 
+==============================================================================================================================
+
 -- Question 4 --
 How many students are under the tutor 'Brijesh'?
+
 -- Answer 4 --
 SELECT COUNT(*) FROM Tutor 
 RIGHT JOIN Staff ON Tutor.staff_id = Staff.staff_id 
 WHERE name = 'Brijesh';
 
+==============================================================================================================================
+
 -- Question 5 --
 Display the staff details who work in CSE department.
+
 -- Answer 5 --
 SELECT * FROM Staff 
 RIGHT JOIN Department ON Staff.dept_id = Department.dept_id 
 WHERE dept_name = 'CSE';
 
+==============================================================================================================================
+
 -- Question 6 --
 How many designations and departments are there?
+
 -- Answer 6 --
 SELECT COUNT(DISTINCT(designation)) FROM Staff;
 SELECT COUNT(DISTINCT(dept_id)) FROM Staff;
 
+==============================================================================================================================
+
 -- Question 7 --
 Display the student details whose name start with 'A'.
+
 -- Answer 7 --
 SELECT * FROM Student 
 WHERE name like 'A%';
 
+==============================================================================================================================
+
 -- Question 8 --
 Display the name of the department, tutor details for the particular student.
+
 -- Answer 8 --
 SELECT Student.name, dept_name, Tutor.staff_id, Staff.name, designation, qualification FROM Student 
 RIGHT JOIN Department ON Student.dept_id = Department.dept_id 
@@ -86,17 +111,25 @@ RIGHT JOIN Tutor ON Student.rollno = Tutor.rollno
 RIGHT JOIN Staff ON Tutor.staff_id = Staff.staff_id 
 WHERE Student.name = 'Cat';
 
+==============================================================================================================================
+
 -- Question 9 --
 Display the total number of male and female students department wise.
+
 -- Answer 9 --
-SELECT dept_name, COUNT(*), gender as genders FROM Student 
+SELECT dept_name, COUNT(*) as gender_count, gender FROM Student 
 RIGHT JOIN Department ON Student.dept_id = Department.dept_id 
 GROUP BY dept_name, gender;
 
+==============================================================================================================================
+
 -- Question 10 --
 Create a view to staff details and their department name whose designation is professor.
+
 -- Answer 10 -- 
 CREATE VIEW ProfessorView AS 
 SELECT staff_id, name, designation, qualification, dept_name FROM Staff 
 RIGHT JOIN Department ON Staff.dept_id = Department.dept_id 
 WHERE designation = 'Professor';
+
+==============================================================================================================================
