@@ -1,0 +1,175 @@
+-- Table Creatoin & Table Deletion --
+CREATE DATABASE 106121085_Lab2;
+USE 106121085_Lab2;
+
+CREATE TABLE EMPLOYEE (fname VARCHAR(255) NOT NULL, mint VARCHAR(1), lname VARCHAR(255) NOT NULL, ssn VARCHAR(255) NOT NULL, bdate DATE, address TEXT, sex VARCHAR(1), salary INT, superssn VARCHAR(255), dno INT);
+CREATE TABLE DEPARTMENT (dname VARCHAR(255) NOT NULL, dno INT NOT NULL, mjrssn VARCHAR(255) NOT NULL, mjrstartdate DATE NOT NULL, dlocation TEXT NOT NULL);
+CREATE TABLE PROJECT (pname VARCHAR(255) NOT NULL, pnumber INT NOT NULL, plocation TEXT NOT NULL, dno INT NOT NULL);
+CREATE TABLE WORKSON (essn VARCHAR(255), pno INT, hours INT);
+CREATE TABLE DEPENDENT (essn VARCHAR(255), dependentname VARCHAR(255), sex VARCHAR(1), bdate DATE, relationship VARCHAR(255));
+
+INSERT INTO EMPLOYEE VALUES ('Michael', 'A', 'John', 'MJ1', '2003-08-08', 'London', 'M', 75000, 'AX2', 101);
+INSERT INTO EMPLOYEE VALUES ('Amy', 'B', 'Xavier', 'AX2', '2001-07-05', 'London', 'F', 105000, '', 101);
+INSERT INTO EMPLOYEE VALUES ('Jason', 'C', 'Reddy', 'JR3', '2000-04-15', 'Berlin', 'M', 15000, '', 102);
+INSERT INTO EMPLOYEE VALUES ('Lakshmi', 'D', 'Saviour', 'LS4', '2002-06-25', 'New York', 'F', 500, 'JR3', 103);
+
+INSERT INTO DEPARTMENT VALUES ('Research', 101, 'AX2', '1982-06-14', 'London');
+INSERT INTO DEPARTMENT VALUES ('Training', 102, 'JR3', '1988-02-20', 'Berlin');
+INSERT INTO DEPARTMENT VALUES ('Culinary', 103, 'LS4', '1999-11-05', 'New York');
+
+INSERT INTO PROJECT VALUES ('Alpha', 1, 'Berlin', 102);
+INSERT INTO PROJECT VALUES ('Beta', 2, 'New York', 103);
+
+INSERT INTO WORKSON VALUES ('MJ1', 1, 7);
+INSERT INTO WORKSON VALUES ('JR3', 1, 22);
+INSERT INTO WORKSON VALUES ('LS4', 2, 15);
+
+INSERT INTO DEPENDENT VALUES ('AX2', 'May', 'F', '2002-07-06', 'Sister');
+INSERT INTO DEPENDENT VALUES ('JR3', 'Shekhar', 'M', '1979-12-19', 'Father');
+INSERT INTO DEPENDENT VALUES ('JR3', 'Jason', 'M', '1999-09-21', 'Brother');
+INSERT INTO DEPENDENT VALUES ('LS4', 'Tiger', 'M', '2000-01-14', 'Brother');
+
+=====================================================================================================================================================================================================================
+
+-- Question A --
+Retrieve the birth date and address of the employees who work for 'Research' department.
+
+-- Answer A --
+SELECT EMPLOYEE.bdate, EMPLOYEE.address FROM EMPLOYEE
+RIGHT JOIN DEPARTMENT ON EMPLOYEE.dno = DEPARTMENT.dno
+WHERE dname = 'Research';
+
+=====================================================================================================================================================================================================================
+
+-- Question B --
+For every project lcoated in Berlin list the project number, the controlling department and dept. managers last name, address and birth date.
+
+-- Answer B --
+SELECT PROJECT.pnumber, DEPARTMENT.dname, EMPLOYEE.lname, PROJECT.plocation, EMPLOYEE.bdate FROM PROJECT
+RIGHT JOIN DEPARTMENT ON PROJECT.dno = DEPARTMENT.dno 
+RIGHT JOIN EMPLOYEE ON DEPARTMENT.mjrssn = EMPLOYEE.ssn    
+WHERE plocation = 'Berlin';
+
+=====================================================================================================================================================================================================================
+
+-- Question C --
+For each employee, retrieve the employees first name and last name and first name and last name of his immediate supervisor.
+
+-- Answer C --
+SELECT E1.ssn, E1.fname, E1.lname, E1.superssn, E2.fname, E2.lname FROM EMPLOYEE E1
+RIGHT JOIN EMPLOYEE E2 ON E1.superssn = E2.ssn
+WHERE E1.ssn IS NOT NULL;
+
+=====================================================================================================================================================================================================================
+
+-- Question D --
+Get all information about employees working in 'Research' department including the department information.
+
+-- Answer D --
+SELECT EMPLOYEE.fname, EMPLOYEE.mint, EMPLOYEE.lname, DEPARTMENT.dname, DEPARTMENT.mjrstartdate, DEPARTMENT.dlocation FROM DEPARTMENT
+RIGHT JOIN EMPLOYEE ON DEPARTMENT.dno = EMPLOYEE.dno
+WHERE dname = 'Research';
+
+=====================================================================================================================================================================================================================
+
+-- Question E --
+Make a list of all project numbers for projects that involve an employee whos last name is 'John' as a worker or as a manager of the department that controls the project.
+
+-- Answer E --
+SELECT PROJECT.pnumber, DEPARTMENT.dname FROM PROJECT
+RIGHT JOIN DEPARTMENT ON PROJECT.dno = DEPARTMENT.dno
+RIGHT JOIN EMPLOYEE ON PROJECT.dno = EMPLOYEE.dno
+WHERE EMPLOYEE.lname = 'John';
+
+=====================================================================================================================================================================================================================
+
+-- Question F --
+Retrieve the names of employees who have no dependents.
+
+-- Answer F --
+SELECT EMPLOYEE.fname, EMPLOYEE.lname, EMPLOYEE.ssn FROM DEPENDENT
+RIGHT JOIN EMPLOYEE ON EMPLOYEE.ssn = DEPENDENT.essn
+WHERE DEPENDENT.relationship IS NULL;
+
+=====================================================================================================================================================================================================================
+
+-- Question G --
+Retrieve the name of each employee who has a dependent with the same first name and same sex as the employee.
+
+-- Answer G --
+SELECT EMPLOYEE.fname, EMPLOYEE.lname FROM EMPLOYEE
+RIGHT JOIN DEPENDENT ON EMPLOYEE.ssn = DEPENDENT.essn
+WHERE EMPLOYEE.fname = DEPENDENT.dependentname
+AND EMPLOYEE.sex = DEPENDENT.sex;
+
+=====================================================================================================================================================================================================================
+
+-- Question H --
+Find the maximum and minimum salary of all employees.
+
+-- Answer H --
+SELECT MAX(salary), MIN(salary) FROM EMPLOYEE;
+
+=====================================================================================================================================================================================================================
+
+-- Question I --
+Count the number of distint salary values in the database.
+
+-- Answer I --
+SELECT COUNT(DISTINCT(salary)) FROM EMPLOYEE;
+
+=====================================================================================================================================================================================================================
+
+-- Question J --
+Create index for employee table based on fname.
+
+-- Answer J --
+CREATE INDEX idx
+ON EMPLOYEE (fname);
+
+=====================================================================================================================================================================================================================
+
+-- Question K --
+Create a view with fname and salary.
+
+-- Answer K --
+CREATE VIEW View1 AS
+SELECT fname, salary FROM EMPLOYEE;
+
+=====================================================================================================================================================================================================================
+
+-- Question L --
+Create a view with fname, deptid, projectnumber.
+
+-- Answer L --
+CREATE VIEW View2 AS
+SELECT EMPLOYEE.fname, EMPLOYEE.dno, PROJECT.pnumber FROM EMPLOYEE
+RIGHT JOIN PROJECT ON EMPLOYEE.dno = PROJECT.dno;
+
+=====================================================================================================================================================================================================================
+
+-- Question M --
+List the total salary paid to the employees.
+
+-- Answer M --
+SELECT * FROM View1;
+
+=====================================================================================================================================================================================================================
+
+-- Question N --
+List the maximum, minimum and average salary in the company.
+
+-- Answer N --
+SELECT MAX(salary), MIN(salary), AVG(salary) FROM EMPLOYEE;
+
+=====================================================================================================================================================================================================================
+
+-- Question O --
+List employee names for those who have joined between 30-6-2001 and 30-12-2001.
+
+-- Answer O --
+SELECT EMPLOYEE.fname, EMPLOYEE.lname, DEPARTMENT.mjrstartdate FROM EMPLOYEE
+RIGHT JOIN DEPARTMENT ON EMPLOYEE.dno = DEPARTMENT.dno
+WHERE DEPARTMENT.mjrstartdate BETWEEN '1999-06-30' AND '1999-12-30';
+
+=====================================================================================================================================================================================================================
