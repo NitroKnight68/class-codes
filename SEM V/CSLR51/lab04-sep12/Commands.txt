@@ -1,0 +1,238 @@
+-- Table Creation and Table Insertion --
+CREATE DATABASE 106121085_Lab4;
+USE 106121085_Lab4;
+
+CREATE TABLE Employee (EmpNo INT, EmpName VARCHAR(255), Sex VARCHAR(1), Salary INT, Address TEXT, DeptNo INT);
+CREATE TABLE Department (DeptNo INT, DeptName VARCHAR(255), Location TEXT);
+
+INSERT INTO Employee VALUES (1, 'Abby', 'F', 10000, 'Central Avenue', 10);
+INSERT INTO Employee VALUES (2, 'Ben', 'M', 1000, 'East Avenue', 11);
+INSERT INTO Employee VALUES (3, 'Christy', 'F', 5000, 'West Avenue', 12);
+INSERT INTO Employee VALUES (4, 'Dan', 'M', 3000, 'North Avenue', 11);
+INSERT INTO Employee VALUES (5, 'Emma', 'F', 45000, 'South Avenue', 12);
+
+INSERT INTO Department VALUES (10, 'Computers', 'Bangalore');
+INSERT INTO Department VALUES (11, 'Medical', 'New Delhi');
+INSERT INTO Department VALUES (12, 'Production', 'Chennai');
+
+=====================================================================================================================================================================================================================
+
+-- Question A --
+Create a procedure to display the details of an employee record from employee table for a given employee number.
+
+-- Answer A --
+DELIMITER $$
+CREATE PROCEDURE Procedure1 (IN Arg1 INT)
+BEGIN
+    SELECT * FROM Employee
+    WHERE EmpNo = Arg1;
+END $$
+DELIMITER ;
+
+CALL Procedure1(2);
+
+=====================================================================================================================================================================================================================
+
+-- Question B --
+Create a procedure to add details of a new employee into employee table.
+
+-- Answer B --
+DELIMITER $$
+CREATE PROCEDURE Procedure2 (IN Arg1 INT, IN Arg2 VARCHAR(255), IN Arg3 VARCHAR(1), IN Arg4 INT, IN Arg5 TEXT, IN Arg6 INT)
+BEGIN
+    INSERT INTO Employee VALUES (Arg1, Arg2, Arg3, Arg4, Arg5, Arg6);
+END $$
+DELIMITER ;
+
+CALL Procedure2(6, 'Frank', 'M', 2500, 'Backward Avenue', 11);
+
+=====================================================================================================================================================================================================================
+
+-- Question C --
+Write a procedure raise_sal which increases the salary of an employee. It accepts an employee number and salary nicrease amount. It uses the employee number to find the current salary from the Employee table and update the salary.
+
+-- Answer C --
+DELIMITER $$
+CREATE PROCEDURE Procedure3 (IN Arg1 INT, IN Arg2 INT)
+BEGIN
+    UPDATE Employee
+    SET Salary = Arg2
+    WHERE EmpNo = Arg1;
+END $$
+DELIMITER ;
+
+CALL Procedure3(2, 4500);
+
+=====================================================================================================================================================================================================================
+
+-- Question D --
+Create a procedure to delete a record from Employee table for a given employee name.
+
+-- Answer D --
+DELIMITER $$
+CREATE PROCEDURE Procedure4 (IN Arg1 VARCHAR(255))
+BEGIN
+    DELETE FROM Employee
+    WHERE EmpName = Arg1;
+END $$
+DELIMITER ;
+
+CALL Procedure4('Frank');
+
+=====================================================================================================================================================================================================================
+
+-- Question E --
+Write a function to display maximum salary of employees from the employee table.
+
+-- Answer E --
+DELIMITER $$
+CREATE FUNCTION Function1 ()
+RETURNS INT DETERMINISTIC
+BEGIN
+    DECLARE MaxSalary INT;
+    SELECT MAX(Salary) INTO MaxSalary FROM Employee;
+    RETURN MaxSalary;
+END $$
+DELIMITER ;
+
+SELECT Function1();
+
+=====================================================================================================================================================================================================================
+
+-- Question F --
+Write a function to display the number of employees working in the organization.
+
+-- Answer F --
+DELIMITER $$
+CREATE FUNCTION Function2 ()
+RETURNS INT DETERMINISTIC
+BEGIN
+    DECLARE EmpCount INT;
+    SELECT COUNT(EmpNo) INTO EmpCount FROM Employee;
+    RETURN EmpCount;
+END $$
+DELIMITER ;
+
+SELECT Function2();
+
+=====================================================================================================================================================================================================================
+
+-- Question G --
+Write a function to display salary of an employee with the given employee number.
+
+-- Answer G --
+DELIMITER $$
+CREATE FUNCTION Function3 (Arg1 INT)
+RETURNS INT DETERMINISTIC
+BEGIN
+    DECLARE EmpSalary INT;
+    SELECT Salary INTO EmpSalary FROM Employee
+    WHERE EmpNo = Arg1;
+    RETURN EmpSalary;
+END $$
+DELIMITER ;
+
+SELECT Function3(3);
+
+=====================================================================================================================================================================================================================
+
+-- Question H --
+Write a function average which takes DeptNo as input argument and returns the average salary received by the employee in the given department.
+
+-- Answer H --
+DELIMITER $$
+CREATE FUNCTION Function4 (Arg1 INT)
+RETURNS INT DETERMINISTIC
+BEGIN
+    DECLARE AvgSalary INT;
+    SELECT AVG(Salary) INTO AvgSalary FROM Employee
+    WHERE DeptNo = Arg1;
+    RETURN AvgSalary;
+END $$
+DELIMITER ;
+
+SELECT Function4(11);
+
+=====================================================================================================================================================================================================================
+
+-- Question I --
+Write a procedure which takes DeptNo as input parameter and lists the names of all employees belonging to that department.
+
+-- Answer I --
+DELIMITER $$
+CREATE PROCEDURE Procedure5(IN Arg1 INT)
+BEGIN
+    SELECT EmpName FROM Employee
+    WHERE DeptNo = Arg1;
+END $$
+DELIMITER ;
+
+CALL Procedure5(11);
+
+=====================================================================================================================================================================================================================
+
+-- Question J --
+Write a procedure that lists the highest salary drawn by an employee in each of the departments. It should make use aof a named procedure dept_highest which finds the highest salary drawn by an employee for the given department.
+
+-- Answer J --
+DELIMITER $$
+CREATE FUNCTION Function5 (Arg1 INT)
+RETURNS INT DETERMINISTIC
+BEGIN
+    DECLARE MaxSalary INT;
+    SELECT MAX(Salary) INTO MaxSalary FROM Employee
+    WHERE DeptNo = Arg1;
+    RETURN MaxSalary;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE Procedure6()
+BEGIN
+    SELECT DeptNo, Function5(DeptNo) FROM Department;
+END $$
+DELIMITER ;
+
+CALL Procedure6();
+
+=====================================================================================================================================================================================================================
+
+-- Question K --
+Write a function that will display the number of employees with salary more than 50k.
+
+-- Answer K --
+DELIMITER $$
+CREATE FUNCTION Function6 ()
+RETURNS INT DETERMINISTIC
+BEGIN
+    DECLARE CountSalary INT;
+    SELECT COUNT(Salary) INTO CountSalary FROM Employee
+    WHERE Salary > 5000;
+    RETURN CountSalary;
+END $$
+DELIMITER ;
+
+SELECT Function6();
+
+=====================================================================================================================================================================================================================
+
+-- Question L --
+Write a function that will display the count of the number of employees working in Chennai.
+
+-- Answer L --
+DELIMITER $$
+CREATE FUNCTION Function7 ()
+RETURNS INT DETERMINISTIC
+BEGIN
+    DECLARE CountChennai INT;
+    SELECT COUNT(EmpName) INTO CountChennai FROM Employee
+    LEFT JOIN Department
+    ON Employee.DeptNo = Department.DeptNo
+    WHERE Location = 'Chennai';
+    RETURN CountChennai;
+END $$
+DELIMITER ;
+
+SELECT Function7();
+
+=====================================================================================================================================================================================================================
