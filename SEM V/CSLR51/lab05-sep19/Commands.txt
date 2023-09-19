@@ -1,0 +1,208 @@
+-- Table Creation and Table Insertion --
+CREATE DATABASE 106121043_Lab5;
+USE 106121043_Lab5;
+
+CREATE TABLE Employee (Empid INT, Lastname VARCHAR(255), Firstname VARCHAR(255), Email TEXT, Department VARCHAR(255), Designation VARCHAR(255), DOJ DATE, Phoneno VARCHAR(255));
+
+INSERT INTO Employee VALUES (1, 'Zack', 'Abby', 'abby@gmail.com', 'Finance', 'Manager', '2017-06-12', '9876543210');
+INSERT INTO Employee VALUES (2, 'Yanny', 'Ben', 'ben@gmail.com', 'HR', 'Intern', '2018-08-16', '8765432190');
+INSERT INTO Employee VALUES (3, 'Xeno', 'Caleb', 'caleb@gmail.com', 'Finance', 'CTO', '2019-07-10', '7654321890');
+INSERT INTO Employee VALUES (4, 'West', 'Dan', 'dan@gmail.com', 'Technical', 'Intern', '2016-04-02', '6543217890');
+INSERT INTO Employee VALUES (5, 'Valli', 'Emma', 'emma@gmail.com', 'HR', 'Manager', '2015-03-25', '5432167890');
+
+CREATE TABLE Logger (QuestionID INT, LogText TEXT);
+CREATE VIEW EmployeeView AS SELECT * FROM Employee;
+
+=====================================================================================================================================================================================================================
+
+-- Question 1 --
+Create a trigger whicih will calculate the number of rows inserted till now.
+
+-- Answer 1 --
+DELIMITER $$
+CREATE TRIGGER Trigger1
+AFTER INSERT ON Employee
+FOR EACH ROW
+BEGIN
+    DECLARE rowcount INT;
+    SELECT COUNT(*) INTO rowcount FROM Employee;
+    INSERT INTO Logger VALUES (1, rowcount);
+END $$
+DELIMITER ;
+
+SELECT * FROM Logger;
+INSERT INTO Employee VALUES (6, 'Umbra', 'Fred', 'fred@gmail.com', 'Cleaning', 'Intern', '2015-01-21', '4321567890');
+
+DELETE FROM Logger WHERE QuestionID = 1;
+
+=====================================================================================================================================================================================================================
+
+-- Question 2 --
+Create a trigger that displays a message prior to an insert operation on the Employee table.
+
+-- Answer 2 --
+DELIMITER $$
+CREATE TRIGGER Trigger2
+BEFORE INSERT ON Employee
+FOR EACH ROW
+BEGIN
+    INSERT INTO Logger VALUES (2, 'You are inserting a record');
+END $$
+DELIMITER ;
+
+SELECT * FROM Logger;
+INSERT INTO Employee VALUES (6, 'Umbra', 'Fred', 'fred@gmail.com', 'Cleaning', 'Intern', '2015-01-21', '4321567890');
+
+DELETE FROM Logger WHERE QuestionID > 0;
+DELETE FROM Employee WHERE Empid = 6;
+
+=====================================================================================================================================================================================================================
+
+-- Question 3 --
+Create a trigger that adds "+91" to all phone numbers in the Employee table.
+
+-- Answer 3 --
+DELIMITER $$
+CREATE TRIGGER Trigger3
+BEFORE UPDATE ON Employee
+FOR EACH ROW
+BEGIN
+    SET NEW.Phoneno = CONCAT('+91', NEW.Phoneno);
+    INSERT INTO Logger VALUES (3, 'You are updating phone numbers');
+END $$
+DELIMITER ;
+
+SELECT * FROM Logger;
+UPDATE Employee SET Empid = Empid WHERE Empid = 1;
+DROP TRIGGER Trigger3;
+
+UPDATE Employee SET Phoneno = '9876543210' WHERE Empid = 1;
+DELETE FROM Logger WHERE QuestionID > 0;
+
+=====================================================================================================================================================================================================================
+
+-- Question 4 --
+Write a trigger to ensure that Employee table does not contain duplicate or null values in the Firstname column.
+
+-- Answer 4 --
+DELIMITER $$
+CREATE TRIGGER Trigger4
+BEFORE INSERT ON Employee
+FOR EACH ROW
+BEGIN
+    IF NEW.Firstname IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error occured. Firstname is NULL';
+    END IF;
+    IF EXISTS (SELECT 1 FROM Employee WHERE Firstname = NEW.Firstname) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error occured. Firstname has a DUPLICATE';
+    END IF;
+END $$
+DELIMITER ;
+
+INSERT INTO Employee VALUES (6, 'Umbra', 'Abby', 'fred@gmail.com', 'Cleaning', 'Intern', '2015-01-21', '4321567890');
+
+DELETE FROM Employee WHERE Empid = 6;
+
+=====================================================================================================================================================================================================================
+
+-- Question 5 --
+Create a trigger that whenever an insert, update or delete operation occurs on the Employee table, a row is added to the Logger table recording the date, user and action.
+
+-- Answer 5 --
+
+=====================================================================================================================================================================================================================
+
+-- Question 6 --
+Create a trigger to insert employee details into Employee table only if DOJ > 2018.
+
+-- Answer 6 --
+DELIMITER $$
+CREATE TRIGGER Trigger6
+BEFORE INSERT ON Employee
+FOR EACH ROW
+BEGIN
+    IF NEW.DOJ <= '2018-01-01' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error occured. DOJ is less than 2018';
+    END IF;
+END $$
+DELIMITER ;
+
+SELECT * FROM Logger;
+INSERT INTO Employee VALUES (6, 'Umbra', 'Fred', 'fred@gmail.com', 'Cleaning', 'Intern', '2015-01-21', '4321567890');
+
+DELETE FROM Logger WHERE QuestionID > 0;
+DELETE FROM Employee WHERE Empid = 6;
+
+=====================================================================================================================================================================================================================
+
+-- Question 7 --
+Create a trigger to prevent any employee named John to be inserted into the table.
+
+-- Answer 7 --
+DELIMITER $$
+CREATE TRIGGER Trigger7
+BEFORE INSERT ON Employee
+FOR EACH ROW
+BEGIN
+    IF NEW.Firstname = 'John' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error occured. Firstname cannot be John';
+    END IF;
+END $$
+DELIMITER ;
+
+SELECT * FROM Logger;
+INSERT INTO Employee VALUES (6, 'Umbra', 'John', 'fred@gmail.com', 'Cleaning', 'Intern', '2019-01-21', '4321567890');
+
+DELETE FROM Logger WHERE QuestionID > 0;
+DELETE FROM Employee WHERE Empid = 6;
+
+=====================================================================================================================================================================================================================
+
+-- Question 8 --
+Create a trigger to raise an exception if Empid is changed.
+
+-- Answer 8 --
+DELIMITER $$
+CREATE TRIGGER Trigger8
+BEFORE UPDATE ON Employee
+FOR EACH ROW
+BEGIN
+    IF NEW.Empid <> OLD.Empid THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error occured. Cannot change Empid';
+    END IF;
+END $$
+DELIMITER ;
+
+SELECT * FROM Logger;
+UPDATE Employee SET Empid = 10 WHERE Empid = 1;
+
+DELETE FROM Logger WHERE QuestionID > 0;
+DELETE FROM Employee WHERE Empid = 6;
+
+=====================================================================================================================================================================================================================
+
+-- Question 9 --
+Create a trigger when someone tries to insert a value into Employee table values are inserted into views.
+
+-- Answer 9 --
+DELIMITER $$
+CREATE TRIGGER Trigger9
+BEFORE INSERT ON Employee
+FOR EACH ROW
+BEGIN
+    INSERT INTO EmployeeView VALUES (NEW.Empid, NEW.Lastname, NEW.Firstname, NEW.Email, NEW.Department, NEW.Designation, NEW.DOJ, NEW.Phoneno);
+END $$
+DELIMITER ;
+
+SELECT * FROM Logger;
+INSERT INTO Employee VALUES (6, 'Umbra', 'Fred', 'fred@gmail.com', 'Cleaning', 'Intern', '2019-01-21', '4321567890');
+
+DELETE FROM Logger WHERE QuestionID > 0;
+DELETE FROM Employee WHERE Empid = 6;
+
+=====================================================================================================================================================================================================================
