@@ -131,13 +131,6 @@ def render(state, c_choice, h_choice):
 
 
 def ai_turn(c_choice, h_choice):
-    """
-    It calls the minimax function if the depth < 9,
-    else it choices a random coordinate.
-    :param c_choice: computer's choice X or O
-    :param h_choice: human's choice X or O
-    :return:
-    """
     depth = len(empty_cells(board))
     if depth == 0 or game_over(board):
         return
@@ -158,12 +151,6 @@ def ai_turn(c_choice, h_choice):
 
 
 def human_turn(c_choice, h_choice):
-    """
-    The Human plays choosing a valid move.
-    :param c_choice: computer's choice X or O
-    :param h_choice: human's choice X or O
-    :return:
-    """
     depth = len(empty_cells(board))
     if depth == 0 or game_over(board):
         return
@@ -195,71 +182,30 @@ def human_turn(c_choice, h_choice):
         except (KeyError, ValueError):
             print('Bad choice')
 
+clean()
+h_choice = 'X'
+c_choice = 'O'
+first = 'Y'
 
-def main():
-    """
-    Main function that calls all functions
-    """
+clean()
+# Main loop of this game
+while len(empty_cells(board)) > 0 and not game_over(board):
+    human_turn(c_choice, h_choice)
+    ai_turn(c_choice, h_choice)
+
+# Game over message
+if wins(board, HUMAN):
     clean()
-    h_choice = ''  # X or O
-    c_choice = ''  # X or O
-    first = ''  # if human is the first
-
-    # Human chooses X or O to play
-    while h_choice != 'O' and h_choice != 'X':
-        try:
-            print('')
-            h_choice = input('Choose X or O\nChosen: ').upper()
-        except (EOFError, KeyboardInterrupt):
-            print('Bye')
-            exit()
-        except (KeyError, ValueError):
-            print('Bad choice')
-
-    # Setting computer's choice
-    if h_choice == 'X':
-        c_choice = 'O'
-    else:
-        c_choice = 'X'
-
-    # Human may starts first
+    print(f'Human turn [{h_choice}]')
+    render(board, c_choice, h_choice)
+    print('YOU WIN!')
+elif wins(board, COMP):
     clean()
-    while first != 'Y' and first != 'N':
-        try:
-            first = input('First to start?[y/n]: ').upper()
-        except (EOFError, KeyboardInterrupt):
-            print('Bye')
-            exit()
-        except (KeyError, ValueError):
-            print('Bad choice')
-
-    # Main loop of this game
-    while len(empty_cells(board)) > 0 and not game_over(board):
-        if first == 'N':
-            ai_turn(c_choice, h_choice)
-            first = ''
-
-        human_turn(c_choice, h_choice)
-        ai_turn(c_choice, h_choice)
-
-    # Game over message
-    if wins(board, HUMAN):
-        clean()
-        print(f'Human turn [{h_choice}]')
-        render(board, c_choice, h_choice)
-        print('YOU WIN!')
-    elif wins(board, COMP):
-        clean()
-        print(f'Computer turn [{c_choice}]')
-        render(board, c_choice, h_choice)
-        print('YOU LOSE!')
-    else:
-        clean()
-        render(board, c_choice, h_choice)
-        print('DRAW!')
-
-    exit()
-
-
-if __name__ == '__main__':
-    main()
+    print(f'Computer turn [{c_choice}]')
+    render(board, c_choice, h_choice)
+    print('YOU LOSE!')
+else:
+    clean()
+    render(board, c_choice, h_choice)
+    print('DRAW!')
+exit()

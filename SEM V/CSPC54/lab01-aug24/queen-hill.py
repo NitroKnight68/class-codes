@@ -1,6 +1,6 @@
 from random import randint
 inf = 10000
-N = 8
+N = 6
 
 # Provides starting chessboard
 def configureRandomly(board, state):
