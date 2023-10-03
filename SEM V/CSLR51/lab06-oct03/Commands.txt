@@ -1,0 +1,208 @@
+-- Table Creation and Table Insertion --
+CREATE DATABASE 106121085_Lab6;
+USE 106121085_Lab6;
+
+CREATE TABLE Pet (Name TEXT, Owner TEXT, Phone TEXT, Species VARCHAR(255), Sex VARCHAR(1), Birth_Date DATE, Death_Date DATE);
+CREATE TABLE Event (Name TEXT, Date DATE, Type TEXT, Remark TEXT);
+
+INSERT INTO Pet VALUES ('Fluffy', 'Harold Regan', '789543210', 'Cat', 'F', '1993-02-04', NULL);
+INSERT INTO Pet VALUES ('Claws', 'Gwen Cappaloo', '875643219', 'Cat', 'M', '1994-03-17', NULL);
+INSERT INTO Pet VALUES ('Buffy', 'Harold Regan', '789543210', 'Dog', 'F', '1989-05-13', NULL);
+INSERT INTO Pet VALUES ('Fang', 'Benny Robert', '987654321', 'Dog', 'M', '1990-08-27', NULL);
+INSERT INTO Pet VALUES ('Bowser', 'Diane Charles', '985423111', 'Dog', 'M', '1979-08-31', '1995-07-29');
+INSERT INTO Pet VALUES ('Chirpy', 'Gwen Cappaloo', '875643219', 'Bird', 'F', '1998-09-11', NULL);
+INSERT INTO Pet VALUES ('Whistler', 'Gwen Cappaloo', '875643219', 'Bird', 'M', '1997-12-09', NULL);
+INSERT INTO Pet VALUES ('Slim', 'Benny Robert', '987654321', 'Snake', 'M', '1996-04-29', NULL);
+INSERT INTO Pet VALUES ('Puffball', 'Hamster Daniel', '342567812', 'Diane', 'F', '1999-03-30', NULL);
+
+INSERT INTO Event VALUES ('Fluffy', '1995-05-15', 'Litter', '4 Kittens, 3 Female, 1 Male');
+INSERT INTO Event VALUES ('Buffy', '1993-06-23', 'Litter', '5 Puppies, 2 Female, 3 Male');
+INSERT INTO Event VALUES ('Buffy', '1994-06-19', 'Litter', '3 Puppies, 3 Female');
+INSERT INTO Event VALUES ('Chirpy', '1999-03-21', 'Vet', 'Needed beak straightened');
+INSERT INTO Event VALUES ('Slim', '1997-08-03', 'Vet', 'Broken rib');
+INSERT INTO Event VALUES ('Bowser', '1991-10-12', 'Kennel', NULL);
+INSERT INTO Event VALUES ('Fang', '1991-10-12', 'Kennel', NULL);
+INSERT INTO Event VALUES ('Fang', '1998-08-28', 'Birthday', 'Gave him a new chew toy');
+INSERT INTO Event VALUES ('Claws', '1998-03-17', 'Birthday', 'Gave him a new flea collar');
+INSERT INTO Event VALUES ('Whistler', '1998-12-09', 'Birthday', 'First birthday');
+
+=====================================================================================================================================================================================================================
+
+-- Question 1 --
+Modify the structure/create new by splitting the column name to(First_Name
+and Last_Name) and copy the values appropriately into it.
+
+-- Answer 1 --
+ALTER TABLE Pet
+ADD COLUMN First_Name TEXT AFTER Owner;
+
+ALTER TABLE Pet
+ADD COLUMN Last_Name TEXT AFTER First_Name;
+
+UPDATE Pet
+SET First_Name = REPLACE(Owner, SUBSTRING_INDEX(Owner, ' ', -1), ''), Last_Name = SUBSTRING_INDEX(Owner, ' ', -1);
+
+ALTER TABLE Pet
+DROP COLUMN Owner;
+
+=====================================================================================================================================================================================================================
+
+-- Question 2 --
+List the animals that were born during or after 1998.
+
+-- Answer 2 --
+SELECT * FROM Pet
+WHERE Birth_Date >= '1998-01-01';
+
+=====================================================================================================================================================================================================================
+
+-- Question 3 --
+List the pets that were snake or bird.
+
+-- Answer 3 --
+SELECT * FROM Pet
+WHERE Species = 'Snake' OR Species = 'Bird';
+
+=====================================================================================================================================================================================================================
+
+-- Question 4 --
+List each group of species based on its birthdate (oldest first).
+
+-- Answer 4 --
+SELECT Species, MIN(Birth_Date) FROM Pet
+GROUP BY Species;
+
+=====================================================================================================================================================================================================================
+
+-- Question 5 --
+Display the age of every species as alias.
+
+-- Answer 5 --
+SELECT Name, TIMESTAMPDIFF(YEAR, Birth_Date, CURDATE()) as Age FROM Pet
+WHERE Death_Date IS NULL;
+
+=====================================================================================================================================================================================================================
+
+-- Question 6 --
+Determine age at death for animals that have died.
+
+-- Answer 6 --
+SELECT Name, TIMESTAMPDIFF(YEAR, Birth_Date, Death_Date) as Age FROM Pet
+WHERE Death_Date IS NOT NULL;
+
+=====================================================================================================================================================================================================================
+
+-- Question 7 --
+Find animals with birthdays in the current month.
+
+-- Answer 7 --
+SELECT Name, Birth_Date FROM Pet
+WHERE MONTH(Birth_Date) = MONTH(NOW());
+
+=====================================================================================================================================================================================================================
+
+-- Question 8 --
+Find names containing a "f".
+
+-- Answer 8 --
+SELECT Name, Birth_Date FROM Pet
+WHERE Name LIKE '%f%';
+
+=====================================================================================================================================================================================================================
+
+-- Question 9 --
+Find out how many pets each owner has.
+
+-- Answer 9 --
+SELECT First_Name, Last_Name, COUNT(*) FROM Pet
+GROUP BY First_Name, Last_Name;
+
+=====================================================================================================================================================================================================================
+
+-- Question 10 --
+Number of animals per combination of species and sex.
+
+-- Answer 10 --
+SELECT Species, Sex, COUNT(*) FROM Pet
+GROUP BY Species, Sex;
+
+=====================================================================================================================================================================================================================
+
+-- Question 11 --
+Find out the ages at which each pet had its litters.
+
+-- Answer 11 --
+SELECT Pet.Name, TIMESTAMPDIFF(YEAR, Birth_Date, Event.Date) as Age FROM Pet
+LEFT JOIN Event
+ON Pet.Name = Event.Name
+WHERE Event.Type = 'Litter';
+
+=====================================================================================================================================================================================================================
+
+-- Question 12 --
+Find breeding pairs among the pets.
+
+-- Answer 12 --
+SELECT P1.Name, P1.Sex, P1.Species, P2.Name, P2.Sex, P2.Species FROM Pet P1
+LEFT JOIN Pet P2 ON P1.Species = P2.Species
+WHERE P1.Sex <> P2.Sex;
+
+=====================================================================================================================================================================================================================
+
+-- Question 13 --
+Create a Trigger that adds “+47” to all Phone numbers in the pet table. Test and see if the Trigger works properly by inserting and updating some data in the table.
+
+-- Answer 13 --
+DELIMITER $$
+CREATE TRIGGER Trigger1
+BEFORE UPDATE ON Pet
+FOR EACH ROW
+BEGIN
+    SET NEW.Phone = CONCAT('+47 ', NEW.Phone);
+END $$
+DELIMITER ;
+
+UPDATE Pet
+SET Phone = Phone;
+
+DROP TRIGGER Trigger1;
+UPDATE Pet SET Phone = REPLACE(Phone, '+47 ', '');
+
+=====================================================================================================================================================================================================================
+
+-- Question 14 --
+Create a procedure for Pet table that will return oldest and youngest pet.
+
+-- Answer 14 --
+DELIMITER $$
+CREATE PROCEDURE Procedure1 ()
+BEGIN
+    SELECT Name as Oldest_Pet FROM Pet
+    WHERE Birth_Date = (SELECT MIN(Birth_Date) FROM Pet);
+    SELECT Name as Youngest_Pet FROM Pet
+    WHERE Birth_Date = (SELECT MAX(Birth_Date) FROM Pet);
+END $$
+DELIMITER ;
+
+CALL Procedure1();
+
+=====================================================================================================================================================================================================================
+
+-- Question 15 --
+Write a function that will return age of a given pet.
+
+-- Answer 15 --
+DELIMITER $$
+CREATE FUNCTION Function1 (Arg1 TEXT)
+RETURNS INT DETERMINISTIC
+BEGIN
+    DECLARE Age INT;
+    SELECT TIMESTAMPDIFF(YEAR, Birth_Date, CURDATE()) INTO Age FROM Pet
+    WHERE Name = Arg1;
+    RETURN Age;
+END $$
+DELIMITER ;
+
+SELECT Function1('Buffy');
+
+=====================================================================================================================================================================================================================
