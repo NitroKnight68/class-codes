@@ -77,14 +77,13 @@ def dpll():
     literals = [i for i in list(set(input_cnf)) if i.isalpha()]
     cnf = input_cnf.splitlines()
     if solve(cnf, literals):
-        print('\nResult: SATISFIABLE\n')
-        print('Solution:')
+        print('Satisfiable')
         for i in assign_true:
-            print(' ' + i, '= True')
+            print(i, '= True')
         for i in assign_false:
-            print(' ' + i, '= False')
+            print(i, '= False')
     else:
-        print('\nResult: UNSATISFIABLE')
+        print('Unsatisfiable')
     print()
 
 if __name__=='__main__':
