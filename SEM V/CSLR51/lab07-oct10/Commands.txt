@@ -1,0 +1,56 @@
+use 106121085_Lab7
+db.createCollection('Employees')
+
+=====================================================================================================================================================================================================================
+
+-- Question 1 --
+Work with basic Create, Read, Update and Delete operations in MongoDB
+
+-- Answer 1 --
+
+db.Employees.insertOne({name : 'Adam', age : 25, role : 'Manager', projectID : [1, 2, 3]})
+db.Employees.insertMany([{name : 'Blake', age : 28, role : 'Developer', projectID : [1, 3]}, {name : 'Candice', age : 32, role : 'Manager'}, {name : 'Daniel', projectID : [4]}])
+
+db.Employees.find().pretty()
+db.Employees.find({role : 'Manager'}).pretty()
+db.Employees.find({role : 'Manager'}, {age : 0}).pretty()
+
+db.Employees.update({role : 'Developer'}, {$set : {role : 'Engineer'}})
+
+db.Employees.deleteOne({name : 'Adam'})
+
+=====================================================================================================================================================================================================================
+
+-- Question 2 --
+Explore intermediate Mongo queries using Comparison, Logical, Element and Array Operators 
+
+-- Answer 2 --
+
+db.Employees.find({age : {$gt : 30}}).pretty()
+db.Employees.find({role : {$nin : ['Manager', 'CEO']}}).pretty()
+
+db.Employees.find({$and : [{age : {$gt : 25}}, {role : 'Developer'}]}).pretty()
+db.Employees.find({$or : [{age : {$gt : 25}}, {role : 'Developer'}]}).pretty()
+
+db.Employees.find({age : {$exists : false}}).pretty()
+db.Employees.find({age : {$type : 1}}).pretty()
+db.Employees.find({age : {$type : 2}}).pretty()
+
+db.Employees.find({projectID : {$all : [1, 3]}}).pretty()
+db.Employees.find({projectID : {$elemMatch : {$gt : 2}}}).pretty()
+db.Employees.find({projectID : {$size : 2}}).pretty()
+
+=====================================================================================================================================================================================================================
+
+-- Question 3 --
+Explore advanced Mongo queries using Group, Match and Sort Operators
+
+-- Answer 3 --
+
+db.Employees.aggregate([{$group : {_id : '$role'}}]).pretty()
+db.Employees.aggregate([{$match : {role : 'Developer'}}]).pretty()
+db.Employees.aggregate([{$sort : {role : 1, name : 1}}]).pretty()
+
+=====================================================================================================================================================================================================================
+
+
