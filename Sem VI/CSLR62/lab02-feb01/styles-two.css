@@ -1,0 +1,43 @@
+/* Over-ridden by Inline CSS */
+
+body {
+	background-color: #FFFFFF;
+	font-family: "Microsoft Sans Serif";
+	font-size: 16px;
+	padding: 3rem 6rem;
+	margin: 0;
+}
+
+h3 {
+	font-size: 2rem;
+	background-color: #C63D2F;
+	margin: 3rem 0 1rem;
+	padding: 0.5rem;
+	width: 6.5rem;
+}
+
+img {
+	float: right;
+	margin: 0;
+	position: relative;
+	bottom: 13.2rem;
+	right: 1rem;
+}
+
+a {
+	color: #FFFFFF;
+	background-color: #C63D2F;
+	font-family: "Microsoft Sans Serif";
+	font-size: 1.5rem;
+	text-decoration: none;
+	padding: 1.5rem 2rem;
+	border: 0;
+	float: right;
+	position: relative;
+	bottom: 7rem;
+}
+
+a:hover {
+	background-color: #FF9B50;
+	cursor: pointer;
+}
